@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Payment</title>
+	<script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+	
+	
+	<form id="payment-form">
+  		<div class="form-row">
+  			<label for="amount">
+      			Amount
+    		</label>
+    		<input type="text" value="" name="amount" id="amount" />
+    		
+    		<label for="card-element">
+      			Credit or debit card
+    		</label>
+    		<div id="card-element">
+      			<!-- A Stripe Element will be inserted here. -->
+    		</div>
+    		
+    		<label for="card-number">
+      			Card Number
+    		</label>
+    		<div id="card-number">
+      			<!-- A Stripe Element will be inserted here. -->
+    		</div>
+    		<label for="card-expiry">
+      			Card Expiry
+    		</label>
+    		<div id="card-expiry">
+      			<!-- A Stripe Element will be inserted here. -->
+    		</div>
+    		<label for="card-cvc">
+      			CVC
+    		</label>
+    		<div id="card-cvc">
+      			<!-- A Stripe Element will be inserted here. -->
+    		</div>
+
+    		<!-- Used to display Element errors. -->
+    		<div id="card-errors" role="alert"></div>
+  		</div>
+
+  		<button>Submit Payment</button>
+  		
+	</form>
+	
+	<script type="text/javascript">
+		var data = {
+			stripeToken: '',
+			amount: '',
+		}	
+		
+		var stripe = Stripe("pk_test_sHnZDFCFuu6b6sHMaHzolLA100RN8ksrRC");
+		var elements = stripe.elements();
+		
+
+		var cardNumber = elements.create('cardNumber');
+		var cardExpiry = elements.create('cardExpiry');
+		var cardCvc = elements.create('cardCvc');
+				
+		cardNumber.mount("#card-number");
+		cardExpiry.mount("#card-expiry");
+		cardCvc.mount("#card-cvc");
+		
+		// Create a token or display an error when the form is submitted.
+		var form = document.getElementById('payment-form');
+		form.addEventListener('submit', function(event) {
+		  event.preventDefault();
+		  
+		  stripe.createToken(cardNumber).then(function(result) {
+		    if (result.error) {
+		      // Inform the customer that there was an error.
+		      var errorElement = document.getElementById('card-errors');
+		      errorElement.textContent = result.error.message;
+		    } else {
+		      // Send the token to server.
+		      stripeTokenHandler(result.token);
+		    }
+		  });
+		});
+		
+		function stripeTokenHandler(token) {
+			  // Insert the token ID into the form so it gets submitted to the server
+			  var form = document.getElementById('payment-form');
+			  var hiddenInput = document.createElement('input');
+			  hiddenInput.setAttribute('type', 'hidden');
+			  hiddenInput.setAttribute('name', 'stripeToken');
+			  hiddenInput.setAttribute('value', token.id);
+			  form.appendChild(hiddenInput);
+			
+			  data.stripeToken = token.id
+			  
+			  // Submit the form
+			  //form.submit();
+			  submit();
+			}
+		
+		
+		function submit(){
+			var amount = document.getElementById("amount").value
+			
+			data.amount = amount
+			
+			fetch("/charge", {
+				method: "POST",
+				headers: {"Content-Type" : "application/json"},
+				body: JSON.stringify(data)
+			}).then((response) => {
+				return response.json()
+			}).then((res) => {
+				console.log(res)
+			})
+			
+		
+		}
+	</script>
+</body>
+</html>
