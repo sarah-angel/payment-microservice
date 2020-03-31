@@ -33,6 +33,10 @@
       			Amount
     		</label>
     		<input type="text" value="" name="amount" id="amount" />
+    		<label for="amount">
+      			Currency *should be dropdown list
+    		</label>
+    		<input type="text" value="" name="currency" id="currency" />
     		
     		<label for="card-element">
       			Credit or debit card
@@ -80,6 +84,7 @@
 		var data = {
 			stripeToken: null,
 			amount: '',
+			currency: 'usd',
 			email: null, 
 			stripeCustomerId: null,
 			cardId: null
@@ -165,7 +170,9 @@
 			var amount = document.getElementById("amount").value
 			
 			data.amount = amount
-			
+			data.currency = document.getElementById("currency") 
+							? document.getElementById("currency").value 
+							: data.currency
 			fetch("/charge", {
 				method: "POST",
 				headers: {"Content-Type" : "application/json"},

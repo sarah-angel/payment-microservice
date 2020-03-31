@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sk.payments.models.ChargeRequest;
-import com.sk.payments.models.ChargeRequest.Currency;
 import com.sk.payments.services.StripeService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
@@ -26,7 +25,7 @@ public class ChargeController {
       throws StripeException {
     	    	
     	chargeRequest.setDescription("Example charge");
-        chargeRequest.setCurrency(Currency.EUR);
+        //chargeRequest.setCurrency(Currency.EUR);
         
         Charge charge = paymentsService.charge(chargeRequest);
         

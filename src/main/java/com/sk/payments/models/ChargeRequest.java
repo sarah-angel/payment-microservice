@@ -7,7 +7,7 @@ import com.stripe.model.Token;
 @Component
 public class ChargeRequest {
 	private int amount;
-    private Currency currency;
+    private String currency;
     private Token stripeToken;
     private String stripeCustomerId;
     private String cardId;	
@@ -26,9 +26,6 @@ public class ChargeRequest {
 	public void setStripeCustomerId(String stripeCustomerId) {
 		this.stripeCustomerId = stripeCustomerId;
 	}
-	public enum Currency {
-        EUR, USD;
-    }
     public String getDescription() {
 		return description;
 	}
@@ -41,10 +38,10 @@ public class ChargeRequest {
 	public void setAmount(String amount) {
 		this.amount = (int) (Double.parseDouble(amount) * 100); //in cents
 	}
-	public Currency getCurrency() {
+	public String getCurrency() {
 		return currency;
 	}
-	public void setCurrency(Currency currency) {
+	public void setCurrency(String currency) {
 		this.currency = currency;
 	}
 	public Token getStripeToken() {
