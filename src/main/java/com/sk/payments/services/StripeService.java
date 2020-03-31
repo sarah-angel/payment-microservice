@@ -33,7 +33,17 @@ public class StripeService {
         chargeParams.put("amount", chargeRequest.getAmount());
         chargeParams.put("currency", chargeRequest.getCurrency());
         chargeParams.put("description", chargeRequest.getDescription());
-        chargeParams.put("source", chargeRequest.getStripeToken());
+        
+        //Use a saved card if available
+        if ( chargeRequest.getStripeCustomerId() != null && chargeRequest.getStripeCustomerId() != "") {
+        	chargeParams.put("customer", chargeRequest.getStripeCustomerId());
+        	
+        	//Use a card other than the default
+        	if( chargeRequest.getCardId() != null && chargeRequest.getCardId() != "")
+        		chargeParams.put("source", chargeRequest.getCardId());
+        }else
+        	chargeParams.put("source", chargeRequest.getStripeToken());
+        
         return Charge.create(chargeParams);
     }
 }

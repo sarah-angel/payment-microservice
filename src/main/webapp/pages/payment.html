@@ -8,8 +8,27 @@
 <body>
 	
 	
-	<form id="payment-form">
-  		<div class="form-row">
+	
+  		
+  			<label for="stripeCustomerId">
+      			StripeCustomerId *should come from the database and not be displayed
+    		</label>
+    		<input type="text" value="" name="stripeCustomerId" id="stripeCustomerId" />
+    		
+    		<button id="getCards" onclick="getCards()">Get Cards</button>
+    		
+    		<label for="cardId">
+				Card ID
+    		</label>
+    		<input type="text" value="" name="cardId" id="cardId" />
+    		
+    		<input type="checkbox" id="diff-card" name="diff-card" />
+			<label for="diff-card">Use different card</label>
+    		
+    		********************************************** <br/>
+  	
+  	<form id="payment-form">
+  		<div class="form-row">		
   			<label for="amount">
       			Amount
     		</label>
@@ -45,14 +64,25 @@
     		<div id="card-errors" role="alert"></div>
   		</div>
 
+		<input type="checkbox" id="save-card" name="save-card" />
+		<label for="save-card">Save card</label>
+		
+		<label for="email">
+			Email
+	 	</label>
+    	<input type="text" value="" name="email" id="email" />
+  		
   		<button>Submit Payment</button>
   		
 	</form>
 	
 	<script type="text/javascript">
 		var data = {
-			stripeToken: '',
+			stripeToken: null,
 			amount: '',
+			email: null, 
+			stripeCustomerId: null,
+			cardId: null
 		}	
 		
 		var stripe = Stripe("pk_test_sHnZDFCFuu6b6sHMaHzolLA100RN8ksrRC");
@@ -71,6 +101,20 @@
 		var form = document.getElementById('payment-form');
 		form.addEventListener('submit', function(event) {
 		  event.preventDefault();
+		  
+		  //If stripeCustomerId is given and default card is used
+		  //go straight to charge		  
+		  if ( document.getElementById("stripeCustomerId").value != null 
+				  && document.getElementById("stripeCustomerId").value != ""
+				  && !document.getElementById("diff-card").checked){
+			  
+			  data.stripeCustomerId = document.getElementById("stripeCustomerId").value
+			  data.cardId = document.getElementById("cardId").value
+			  
+			  submit()
+			  
+			  return false
+		  }
 		  
 		  stripe.createToken(cardNumber).then(function(result) {
 		    if (result.error) {
@@ -94,12 +138,30 @@
 			  form.appendChild(hiddenInput);
 			
 			  data.stripeToken = token.id
-			  
-			  // Submit the form
-			  //form.submit();
-			  submit();
+
+			  //Check if save-card is checked
+			  if (document.getElementById("save-card").checked == true){
+			  		data.email = document.getElementById("email").value
+				  saveCard()
+			  }else
+				submit()
+			  	
 			}
 		
+		function saveCard(){
+			fetch("/customer", {
+				method: "POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify(data)
+			}).then((response) => {
+				return response.json()
+			}).then((res) => {
+				data.stripeCustomerId = res.id //should be saved in the database
+				submit()
+			}).catch((error) => {
+				console.log(error)
+			})
+		}
 		
 		function submit(){
 			var amount = document.getElementById("amount").value
@@ -114,9 +176,28 @@
 				return response.json()
 			}).then((res) => {
 				console.log(res)
+			}).catch((error) => {
+				console.log(error)
 			})
 			
 		
+		}
+		
+		//Fetch registered card for customer
+		function getCards(){
+			data.stripeCustomerId = document.getElementById("stripeCustomerId").value
+
+			fetch("/cards", {
+				method: "POST",
+				headers: {"Content-Type" : "application/json"},
+				body: JSON.stringify(data)
+			}).then((response) => {
+				return response.json()
+			}).then((res) => {
+				console.log(res)
+			}).catch((error) => {
+				console.log(error)
+			})
 		}
 	</script>
 </body>

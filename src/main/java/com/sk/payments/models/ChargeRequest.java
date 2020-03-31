@@ -4,11 +4,29 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ChargeRequest {
- 
-    public enum Currency {
+	private int amount;
+    private Currency currency;
+    private String stripeToken;
+    private String stripeCustomerId;
+    private String cardId;	
+    private String description;
+
+    public String getCardId() {
+		return cardId;
+	}
+	public void setCardId(String cardId) {
+		this.cardId = cardId;
+	}
+
+    public String getStripeCustomerId() {
+		return stripeCustomerId;
+	}
+	public void setStripeCustomerId(String stripeCustomerId) {
+		this.stripeCustomerId = stripeCustomerId;
+	}
+	public enum Currency {
         EUR, USD;
     }
-    private String description;
     public String getDescription() {
 		return description;
 	}
@@ -18,8 +36,8 @@ public class ChargeRequest {
 	public int getAmount() {
 		return amount;
 	}
-	public void setAmount(int amount) {
-		this.amount = amount * 100; //in cents
+	public void setAmount(String amount) {
+		this.amount = (int) (Double.parseDouble(amount) * 100); //in cents
 	}
 	public Currency getCurrency() {
 		return currency;
@@ -27,20 +45,10 @@ public class ChargeRequest {
 	public void setCurrency(Currency currency) {
 		this.currency = currency;
 	}
-	public String getStripeEmail() {
-		return stripeEmail;
-	}
-	public void setStripeEmail(String stripeEmail) {
-		this.stripeEmail = stripeEmail;
-	}
 	public String getStripeToken() {
 		return stripeToken;
 	}
 	public void setStripeToken(String stripeToken) {
 		this.stripeToken = stripeToken;
 	}
-	private int amount;
-    private Currency currency;
-    private String stripeEmail;
-    private String stripeToken;
 }
