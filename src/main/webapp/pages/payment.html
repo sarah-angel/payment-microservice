@@ -102,13 +102,16 @@
 		form.addEventListener('submit', function(event) {
 		  event.preventDefault();
 		  
-		  //If stripeCustomerId is given and default card is used
+		  data.stripeCustomerId = document.getElementById("stripeCustomerId").value != ""
+		  							? document.getElementById("stripeCustomerId").value
+		  							: null
+		  							
+		  //If stripeCustomerId is given and existing card is used
 		  //go straight to charge		  
-		  if ( document.getElementById("stripeCustomerId").value != null 
-				  && document.getElementById("stripeCustomerId").value != ""
-				  && !document.getElementById("diff-card").checked){
+		  if (data.stripeCustomerId
+				&& !document.getElementById("diff-card").checked){
 			  
-			  data.stripeCustomerId = document.getElementById("stripeCustomerId").value
+			  //Set card to charge
 			  data.cardId = document.getElementById("cardId").value
 			  
 			  submit()
@@ -116,6 +119,7 @@
 			  return false
 		  }
 		  
+		  //Create token from given card details
 		  stripe.createToken(cardNumber).then(function(result) {
 		    if (result.error) {
 		      // Inform the customer that there was an error.
@@ -129,19 +133,12 @@
 		});
 		
 		function stripeTokenHandler(token) {
-			  // Insert the token ID into the form so it gets submitted to the server
-			  var form = document.getElementById('payment-form');
-			  var hiddenInput = document.createElement('input');
-			  hiddenInput.setAttribute('type', 'hidden');
-			  hiddenInput.setAttribute('name', 'stripeToken');
-			  hiddenInput.setAttribute('value', token.id);
-			  form.appendChild(hiddenInput);
 			
-			  data.stripeToken = token.id
+			  data.stripeToken = token //token.id
 
 			  //Check if save-card is checked
 			  if (document.getElementById("save-card").checked == true){
-			  		data.email = document.getElementById("email").value
+			  	data.email = document.getElementById("email").value ? document.getElementById("email").value : null
 				  saveCard()
 			  }else
 				submit()
@@ -156,7 +153,8 @@
 			}).then((response) => {
 				return response.json()
 			}).then((res) => {
-				data.stripeCustomerId = res.id //should be saved in the database
+				data.stripeCustomerId = data.stripeCustomerId ? data.stripeCustomerId : res.id //should be saved in the database
+				console.log(res)
 				submit()
 			}).catch((error) => {
 				console.log(error)

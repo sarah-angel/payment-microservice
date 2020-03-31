@@ -42,7 +42,7 @@ public class StripeService {
         	if( chargeRequest.getCardId() != null && chargeRequest.getCardId() != "")
         		chargeParams.put("source", chargeRequest.getCardId());
         }else
-        	chargeParams.put("source", chargeRequest.getStripeToken());
+        	chargeParams.put("source", chargeRequest.getStripeToken().getId());
         
         return Charge.create(chargeParams);
     }

@@ -30,7 +30,6 @@ public class CustomerService {
 	    	//if customer is given in request then retrieve existing
 	    	if(customerModel.getStripeCustomerId() != null) {
 	    		Customer customer = Customer.retrieve(customerModel.getStripeCustomerId());
-	    		
 	    		return customer;
 	    	}else {
 	    		Map<String, Object> customerParams = new HashMap<>();

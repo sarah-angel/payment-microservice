@@ -2,11 +2,13 @@ package com.sk.payments.models;
 
 import org.springframework.stereotype.Component;
 
+import com.stripe.model.Token;
+
 @Component
 public class CustomerModel {
 	private String stripeCustomerId;
 	private String email;
-	private String stripeToken;
+	private Token stripeToken;
 	
 	public String getStripeCustomerId() {
 		return stripeCustomerId;
@@ -16,11 +18,11 @@ public class CustomerModel {
 		this.stripeCustomerId = stripeCustomerId;
 	}
 	
-	public String getStripeToken() {
+	public Token getStripeToken() {
 		return stripeToken;
 	}
 
-	public void setStripeToken(String stripeToken) {
+	public void setStripeToken(Token stripeToken) {
 		this.stripeToken = stripeToken;
 	}
 

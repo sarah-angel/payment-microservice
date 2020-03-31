@@ -2,11 +2,13 @@ package com.sk.payments.models;
 
 import org.springframework.stereotype.Component;
 
+import com.stripe.model.Token;
+
 @Component
 public class ChargeRequest {
 	private int amount;
     private Currency currency;
-    private String stripeToken;
+    private Token stripeToken;
     private String stripeCustomerId;
     private String cardId;	
     private String description;
@@ -45,10 +47,10 @@ public class ChargeRequest {
 	public void setCurrency(Currency currency) {
 		this.currency = currency;
 	}
-	public String getStripeToken() {
+	public Token getStripeToken() {
 		return stripeToken;
 	}
-	public void setStripeToken(String stripeToken) {
+	public void setStripeToken(Token stripeToken) {
 		this.stripeToken = stripeToken;
 	}
 }
