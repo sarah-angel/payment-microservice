@@ -34,7 +34,8 @@ public class CustomerService {
 	    	}else {
 	    		Map<String, Object> customerParams = new HashMap<>();
 	    		customerParams.put("email", customerModel.getEmail());        
-	       
+	    		customerParams.put("name", customerModel.getName());        
+
 	    		return Customer.create(customerParams);
 	    	}
 	    }

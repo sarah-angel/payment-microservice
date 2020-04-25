@@ -8,6 +8,7 @@ import com.stripe.model.Token;
 public class CustomerModel {
 	private String stripeCustomerId;
 	private String email;
+	private String name;
 	private Token stripeToken;
 	
 	public String getStripeCustomerId() {
@@ -24,6 +25,14 @@ public class CustomerModel {
 
 	public void setStripeToken(Token stripeToken) {
 		this.stripeToken = stripeToken;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getEmail() {

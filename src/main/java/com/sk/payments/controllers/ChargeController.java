@@ -2,11 +2,11 @@ package com.sk.payments.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sk.payments.models.ChargeRequest;
@@ -15,6 +15,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 
 @RestController
+@CrossOrigin
 public class ChargeController {
 
 	@Autowired
@@ -23,7 +24,7 @@ public class ChargeController {
 	@RequestMapping(value = "/charge", method = RequestMethod.POST)
 	public Response charge(@RequestBody ChargeRequest chargeRequest)
       throws StripeException {
-    	    	
+		
     	chargeRequest.setDescription("Example charge");
         //chargeRequest.setCurrency(Currency.EUR);
         

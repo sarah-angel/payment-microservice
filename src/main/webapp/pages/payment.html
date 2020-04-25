@@ -40,7 +40,12 @@
     		
     		<label for="card-element">
       			Credit or debit card
+    		</label></br>
+    		<label for="amount">
+      			Name on Card
     		</label>
+    		<input type="text" value="" name="cardName" id="cardName" /><br/>
+    		
     		<div id="card-element">
       			<!-- A Stripe Element will be inserted here. -->
     		</div>
@@ -86,6 +91,7 @@
 			amount: '',
 			currency: 'usd',
 			email: null, 
+			name: null,
 			stripeCustomerId: null,
 			cardId: null
 		}	
@@ -144,6 +150,7 @@
 			  //Check if save-card is checked
 			  if (document.getElementById("save-card").checked == true){
 			  	data.email = document.getElementById("email").value ? document.getElementById("email").value : null
+				data.name = document.getElementById("cardName").value ? document.getElementById("cardName").value : null
 				  saveCard()
 			  }else
 				submit()
